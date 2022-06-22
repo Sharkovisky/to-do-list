@@ -1,12 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Alert } from 'react-native';
-
 import { TouchableHighlight } from 'react-native-gesture-handler';
 
 const Home = ({ navigation }) => {
   return(
     <View style={styles.body}>
-      <Text style={styles.text}>Agenda de Contatos</Text>
+      <Text style={styles.text}>Lista de afazeres</Text>
     
       <View style={{width: '75%', marginTop: 30}}>
         <TouchableHighlight style={styles.button} onPress={()=>navigation.navigate('Signin')}>
