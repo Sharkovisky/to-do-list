@@ -17,9 +17,9 @@ class NovaAtividade extends Component {
 
     componentDidMount(){
         console.log(this.props.route.params);
-        if (this.props.route.params.atividade){
+        if (this.props.route.params){
             let atividade = this.props.route.params.atividade
-            console.log(atividade);
+            //console.log(atividade);
             this.setState({
                 nome: atividade.name,
                 local: atividade.localization,
@@ -30,15 +30,14 @@ class NovaAtividade extends Component {
         }
 
         db.transaction(tx => {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS atividades "+
-            +"(id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, local TEXT, descricao TEXT);");
+            tx.executeSql("CREATE TABLE IF NOT EXISTS atividades (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, local TEXT, descricao TEXT);");
         }, error => {
             console.log("error callback: "+JSON.stringify(error));
             console.log(error);
         }, () => {
             console.log('table created')
         });
-    
+    }
 
         inserir = () => {
             db.transaction(tx => {
@@ -51,19 +50,21 @@ class NovaAtividade extends Component {
                     msgAction = 'atualizada'
                 } else {
                     query = `INSERT INTO atividades (nome, local, descricao) VALUES (?, ?, ?);`;
-                    queryParams.push(this.props.route.params.user_id);
+                    //queryParams.push(this.props.route.params.user_id);
+                    queryParams.push();
                     msgAction = 'inserida'
                 }
                 tx.executeSql(query, queryParams, (t, r)=>{
                     let msg = `Atividade conseguiu ser ${msgAction}!`
                     this.setState({sucesso: [{key: msg, message: msg}]});
                     console.log(queryParams);
-                    this.props.navigation.navigate('List contacts', { update: true, user_id: this.props.route.params.user_id });
+                    console.log("Inserido no banco");
+                    //this.props.navigation.navigate('List contacts', { update: true, user_id: this.props.route.params.user_id });
                 }, (t, error)=>{
                     console.log(error);
-                });
+                }
+                );
             })
-        }
     }
 
     nomeChanged = (text) =>{
@@ -87,19 +88,19 @@ class NovaAtividade extends Component {
                         style={styles.input}
                         value={this.state.nome}
                         onChangeText={(text)=>this.nomeChanged(text)}
-                        onFocus={() => !this.state.editMode ? this.state({ nome: ''}): ()=>{}}
+                        //onFocus={() => !this.state.editMode ? this.state({ nome: ''}): ()=>{}}
                     />
                     <TextInput
                         style={styles.input}
                         value={this.state.local}
                         onChangeText={(text) => this.localChanged(text)}
-                        onFocus={() => !this.state.editMode ? this.setState({ local: ''}) : ()=>{}}
+                        //onFocus={() => !this.state.editMode ? this.setState({ local: ''}) : ()=>{}}
                     />
                     <TextInput
                         style={styles.input}
                         value={this.state.descricao}
                         onChangeText={(text) => this.descricaoChanged(text)}
-                        onFocus={() => !this.state.editMode ? this.setState({ descricao: ''}) : ()=>{}}
+                        //onFocus={() => !this.state.editMode ? this.setState({ descricao: ''}) : ()=>{}}
                     />
                     <TouchableHighlight
                         style={[styles.btn, styles.columnContainer]}
@@ -172,3 +173,5 @@ const styles = StyleSheet.create({
         padding: 10,
     },
 });
+
+export default NovaAtividade;
