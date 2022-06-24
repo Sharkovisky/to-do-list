@@ -43,31 +43,41 @@ class DetalhesComponent extends Component {
 
     deletePressed = () => {
         console.log('delete pressed');
-        Alert.alert(
-            "Deletar",
-            "Você quer realmente deletar?",
-            [
-                {
-                    text: "Não",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
-                },
-                {
-                    text: "Sim", onPress: () => {
-                        db.transaction(tx => {
-                            let query = `DELETE FROM atividades WHERE id=${this.props.my_key};`
-                            console.log(query)
-                            tx.executeSql(query);
-                        }, error => {
-                            console.log("Error callback: "+JSON.stringify(error));
-                            console.log(error);
-                        }, (what)=>{
-                            this.props.navigation.navigate('NovaAtividade');
-                        });
-                    }
-                }
-            ]
-        );
+        // Alert.alert(
+        //     "Deletar",
+        //     "Você quer realmente deletar?",
+        //     [
+        //         {
+        //             text: "Não",
+        //             onPress: () => console.log("Cancel Pressed"),
+        //             style: "cancel"
+        //         },
+        //         {
+        //             text: "Sim", onPress: () => {
+        //                 db.transaction(tx => {
+        //                     let query = `DELETE FROM atividades WHERE id=${this.props.my_key};`
+        //                     console.log(query)
+        //                     tx.executeSql(query);
+        //                 }, error => {
+        //                     console.log("Error callback: "+JSON.stringify(error));
+        //                     console.log(error);
+        //                 }, (what)=>{
+        //                     this.props.navigation.navigate('NovaAtividade');
+        //                 });
+        //             }
+        //         }
+        //     ]
+        // );
+        db.transaction(tx => {
+            let query = `DELETE FROM atividades WHERE id=${this.props.my_key};`
+            console.log(query)
+            tx.executeSql(query);
+        }, error => {
+            console.log("Error callback: "+JSON.stringify(error));
+            console.log(error);
+        }, (what)=>{
+            this.props.navigation.navigate('VerAtividades');
+        });
     }
 
     render() {

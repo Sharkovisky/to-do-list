@@ -29,6 +29,10 @@ class AtividadeComponent extends Component {
         });
     }
 
+    atividadeConcluida = () => {
+        
+    }
+
     render() {
         return (
             <TouchableHighlight
@@ -41,7 +45,9 @@ class AtividadeComponent extends Component {
                     <Text style={styles.txtName}>{this.props.name}</Text>
                     <Text style={styles.txtPhone}>{this.props.local}</Text>
                 </View>
-                <Icon name="subdirectory-arrow-right" size={20} color="gray" ></Icon>
+                <TouchableHighlight onPress>
+                    <Icon name="check" size={20} color="gray" ></Icon>
+                </TouchableHighlight>
             </View>
             <View
                 style={{
