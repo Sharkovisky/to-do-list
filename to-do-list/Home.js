@@ -3,7 +3,8 @@ import { StyleSheet, View, TouchableHighlight, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import NovaAtividade from './NovaAtividade.js';
-import { throws } from 'assert';
+import VerAtividades from './VerAtividades.js';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +16,12 @@ class HomeComponent extends Component{
                 <TouchableHighlight
                     style={[styles.btn, styles.columnContainer]}
                     onPress={() => this.props.navigation.navigate('NovaAtividade')}
+                >
+                    <Text style={styles.btnText}>Adicionar atividade</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                    style={[styles.btn, styles.columnContainer]}
+                    onPress={() => this.props.navigation.navigate('VerAtividades')}
                 >
                     <Text style={styles.btnText}>Lista de afazeres</Text>
                 </TouchableHighlight>
@@ -31,6 +38,7 @@ class Home extends Component {
                 <Stack.Navigator>
                     <Stack.Screen name="Home" component={HomeComponent}/>
                     <Stack.Screen name="NovaAtividade" component={NovaAtividade}/>
+                    <Stack.Screen name="VerAtividades" component={VerAtividades}/>
                 </Stack.Navigator>
             </NavigationContainer>
         )
