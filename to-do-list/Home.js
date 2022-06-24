@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import NovaAtividade from './NovaAtividade.js';
 import VerAtividades from './VerAtividades.js';
+import DetalhesAtividade from './DetalhesAtividade.js';
 
 
 const Stack = createNativeStackNavigator();
@@ -39,6 +40,7 @@ class Home extends Component {
                     <Stack.Screen name="Home" component={HomeComponent}/>
                     <Stack.Screen name="NovaAtividade" component={NovaAtividade}/>
                     <Stack.Screen name="VerAtividades" component={VerAtividades}/>
+                    <Stack.Screen name="DetalhesAtividade" component={DetalhesAtividade}/>
                 </Stack.Navigator>
             </NavigationContainer>
         )

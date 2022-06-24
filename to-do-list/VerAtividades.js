@@ -21,7 +21,7 @@ class AtividadeComponent extends Component {
         console.log("PROPS NO CALLBACK")
         console.log(this.props);
 
-        this.props.navigation.navigate('Contact details', {
+        this.props.navigation.navigate('DetalhesAtividade', {
             name: name,
             local: local,
             descricao: descricao,
@@ -29,8 +29,8 @@ class AtividadeComponent extends Component {
         });
     }
 
-    render(){
-        return(
+    render() {
+        return (
             <TouchableHighlight
                 underlayColor="#DDD"
                 onPress={this.onPressCallback}
@@ -55,7 +55,7 @@ class AtividadeComponent extends Component {
             />
             </>
             </TouchableHighlight>
-        )
+        );
     }
 }
 
@@ -73,7 +73,7 @@ class VerAtividades extends Component {
         db.transaction(tx => {
             let query = `SELECT * FROM atividades;`;
             console.log(query);
-            tx.executeSql(q, [], (t, results)=>{
+            tx.executeSql(query, [], (t, results)=>{
                 if (Platform.OS === 'android'){
                     this.setState({ data: results.rows._array });
                 } else {
@@ -96,29 +96,33 @@ class VerAtividades extends Component {
                     my_key={item.id}
                     navigation={this.props.navigation}
                 />
-            )
+            );
         }
     }
 
     renderSeparator = () => {
-        <View
-            style={{
-                backgroundColor: 'black',
-                height: 0.5,
-            }}
-        />
+        return(
+            <View
+                style={{
+                    backgroundColor: 'black',
+                    height: 0.5,
+                }}
+            />
+        );
     };
 
     renderEmptyWarning = () => {
-        <Text>Sem atividades adicionadas.</Text>
+        return(
+            <Text>Sem atividades adicionadas.</Text>
+        );
     }
 
     buttonPressed = () => {
         //this.props.navigation.navigate('Add Contact', { })
     }
 
-    render(){
-        return(
+    render() {
+        return (
             <View style={[styles.column, { scrollEnabled: true }]}>
                 <Text style={styles.title}>Atividades</Text>
                 <FlatList
