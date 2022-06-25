@@ -11,34 +11,46 @@ class DetalhesComponent extends Component {
     editPressed = () => {
         console.log('edit pressed');
 
-        Alert.alert(
-            "Editar?",
-            "Você quer realmente editar?",
-            [
-                {
-                    text: "Não",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
-                },
-                {
-                    text: "Sim",
-                    onPress: () => {
-                        console.log("PROPS ON EDIT");
-                        console.log(this.props);
-                        let atividade = {
-                            nome: this.props.name,
-                            local: this.props.local,
-                            descricao: this.props.descricao,
-                            key: this.props.my_key
-                        }
-                        this.props.navigation.navigate('NovaAtividade', {
-                                atividade: atividade,
-                            }
-                        );
-                    }
-                }
-            ]
-        );
+        // Alert.alert(
+        //     "Editar?",
+        //     "Você quer realmente editar?",
+        //     [
+        //         {
+        //             text: "Não",
+        //             onPress: () => console.log("Cancel Pressed"),
+        //             style: "cancel"
+        //         },
+        //         {
+        //             text: "Sim",
+        //             onPress: () => {
+        //                 console.log("PROPS ON EDIT");
+        //                 console.log(this.props);
+        //                 let atividade = {
+        //                     nome: this.props.name,
+        //                     local: this.props.local,
+        //                     descricao: this.props.descricao,
+        //                     key: this.props.my_key
+        //                 }
+        //                 this.props.navigation.navigate('NovaAtividade', {
+        //                         atividade: atividade,
+        //                     }
+        //                 );
+        //             }
+        //         }
+        //     ]
+        // );
+        console.log("PROPS ON EDIT");
+        console.log(this.props);
+        let atividade = {
+            nome: this.props.name,
+            local: this.props.local,
+            descricao: this.props.descricao,
+            key: this.props.my_key,
+            descricao: this.props.descricao,
+        }
+        this.props.navigation.navigate('NovaAtividade', {
+            atividade: atividade,
+        });
     }
 
     deletePressed = () => {
@@ -111,15 +123,17 @@ class DetalhesAtividade extends Component {
         local: '',
         descricao: '',
         key: '',
+        concluido: '',
     }
 
     componentDidMount(){
-        let name, local, descricao, key;
+        let name, local, descricao, key, concluido;
         name = this.props.route.params.name;
         local = this.props.route.params.local;
         descricao = this.props.route.params.descricao;
         key = this.props.route.params.my_key;
-        this.setState({name: name, local: local, descricao: descricao, key: key});
+        concluido = this.props.route.params.concluido;
+        this.setState({name: name, local: local, descricao: descricao, key: key, concluido: concluido});
     }
 
     render(){
@@ -131,6 +145,7 @@ class DetalhesAtividade extends Component {
                 key={this.state.key}
                 my_key={this.state.key}
                 navigation={this.props.navigation}
+                concluido={this.props.concluido}
             />
         );
     }

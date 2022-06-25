@@ -13,6 +13,7 @@ class NovaAtividade extends Component {
         descricao: 'Descrição da atividade',
         key: undefined,
         editMode: false,
+        concluido: false,
     }
 
     componentDidMount(){
@@ -29,8 +30,11 @@ class NovaAtividade extends Component {
             });
         }
 
+        // db.transaction(tx => {
+        //     tx.executeSql("DROP TABLE atividades")
+        // })
         db.transaction(tx => {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS atividades (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, local TEXT, descricao TEXT);");
+            tx.executeSql("CREATE TABLE IF NOT EXISTS atividades (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, local TEXT, descricao TEXT, concluido BOOLEAN);");
         }, error => {
             console.log("error callback: "+JSON.stringify(error));
             console.log(error);
@@ -42,14 +46,14 @@ class NovaAtividade extends Component {
         inserir = () => {
             db.transaction(tx => {
                 let query;
-                let queryParams = [this.state.nome, this.state.local, this.state.descricao];
+                let queryParams = [this.state.nome, this.state.local, this.state.descricao, this.state.concluido];
                 let msgAction = ''
                 if (this.state.editMode){
-                    query = `UPDATE atividades set nome=?, local=?, descricao=? where id=?;`;
+                    query = `UPDATE atividades set nome=?, local=?, descricao=?, concluido=? where id=?;`;
                     queryParams.push(this.state.key);
                     msgAction = 'atualizada'
                 } else {
-                    query = `INSERT INTO atividades (nome, local, descricao) VALUES (?, ?, ?);`;
+                    query = `INSERT INTO atividades (nome, local, descricao, concluido) VALUES (?, ?, ?, ?);`;
                     //queryParams.push(this.props.route.params.user_id);
                     queryParams.push();
                     msgAction = 'inserida'
@@ -59,7 +63,7 @@ class NovaAtividade extends Component {
                     this.setState({sucesso: [{key: msg, message: msg}]});
                     console.log(queryParams);
                     console.log("Inserido no banco");
-                    //this.props.navigation.navigate('List contacts', { update: true, user_id: this.props.route.params.user_id });
+                    this.props.navigation.navigate('VerAtividades');
                 }, (t, error)=>{
                     console.log(error);
                 }
@@ -88,25 +92,25 @@ class NovaAtividade extends Component {
                         style={styles.input}
                         value={this.state.nome}
                         onChangeText={(text)=>this.nomeChanged(text)}
-                        //onFocus={() => !this.state.editMode ? this.state({ nome: ''}): ()=>{}}
+                        onFocus={() => !this.state.editMode ? this.setState({ nome: ''}): ()=>{}}
                     />
                     <TextInput
                         style={styles.input}
                         value={this.state.local}
                         onChangeText={(text) => this.localChanged(text)}
-                        //onFocus={() => !this.state.editMode ? this.setState({ local: ''}) : ()=>{}}
+                        onFocus={() => !this.state.editMode ? this.setState({ local: ''}) : ()=>{}}
                     />
                     <TextInput
                         style={styles.input}
                         value={this.state.descricao}
                         onChangeText={(text) => this.descricaoChanged(text)}
-                        //onFocus={() => !this.state.editMode ? this.setState({ descricao: ''}) : ()=>{}}
+                        onFocus={() => !this.state.editMode ? this.setState({ descricao: ''}) : ()=>{}}
                     />
                     <TouchableHighlight
                         style={[styles.btn, styles.columnContainer]}
                         onPress={this.inserir}
                     >
-                        <Text style={styles.btnText}>{this.state.btnLabel}</Text>
+                        <Text style={styles.btnText}>Adicionar</Text>
                     </TouchableHighlight>
                 </View>
             </View>

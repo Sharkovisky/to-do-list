@@ -13,11 +13,12 @@ const windowHeight = Dimensions.get('window').height;
 class AtividadeComponent extends Component {
     onPressCallback = () => {
         console.log('Pressing atividade');
-        let name, local, descricao, my_key;
+        let name, local, descricao, my_key, concluido;
         name = this.props.name;
         local = this.props.local;
         descricao = this.props.descricao;
         my_key = this.props.my_key;
+        concluido = this.props.concluido;
         console.log("PROPS NO CALLBACK")
         console.log(this.props);
 
@@ -26,42 +27,70 @@ class AtividadeComponent extends Component {
             local: local,
             descricao: descricao,
             my_key: my_key,
+            concluido: concluido,
         });
     }
 
     atividadeConcluida = () => {
-        
+        let atividade = {
+            nome: this.props.name,
+            local: this.props.local,
+            descricao: this.props.descricao,
+            key: this.props.my_key,
+            concluido: true,
+        }
+        db.transaction(tx => {
+            let queryParams = [atividade.nome, atividade.local, atividade.descricao, atividade.concluido];
+            let query = `UPDATE atividades set nome=?, local=?, descricao=?, concluido=? where id=?;`;
+            queryParams.push(atividade.key);
+            tx.executeSql(query, queryParams, (t, r) => {
+                console.log("Inserido no banco");
+            }, (t, error)=>{
+                console.log(error);
+            }
+            );
+            console.log(query, queryParams);
+        }, error => {
+            console.log("error callback: "+JSON.stringify(error));
+            console.log(error);
+        }, () => {
+            console.log('table created')
+        });
     }
 
     render() {
-        return (
-            <TouchableHighlight
-                underlayColor="#DDD"
-                onPress={this.onPressCallback}
-            >
-            <>
-            <View style={styles.rowContainer}>
-                <View style={styles.itemColumn}>
-                    <Text style={styles.txtName}>{this.props.name}</Text>
-                    <Text style={styles.txtPhone}>{this.props.local}</Text>
+            return (
+                <TouchableHighlight
+                    underlayColor="#DDD"
+                    onPress={this.onPressCallback}
+                >
+                <>
+                <View style={styles.rowContainer}>
+                    <View style={styles.itemColumn}>
+                        <Text style={styles.txtName}>{this.props.name}</Text>
+                        <Text style={styles.txtPhone}>{this.props.local}</Text>
+                    </View>
+                    <View>
+                        <Text>{this.props.concluido}</Text>
+                    </View>
+                    <TouchableHighlight onPress={this.atividadeConcluida}>
+                        <Icon name="check" size={20} color="gray" ></Icon>
+                    </TouchableHighlight>
                 </View>
-                <TouchableHighlight onPress>
-                    <Icon name="check" size={20} color="gray" ></Icon>
+                <View
+                    style={{
+                        borderBottomColor: 'lightgray',
+                        borderBottomWidth: 1,
+                        //width: "95vw",
+                        marginTop: 5,
+                        marginLeft: "auto",
+                        marginRight: "auto",
+                    }}
+                />
+                </>
                 </TouchableHighlight>
-            </View>
-            <View
-                style={{
-                    borderBottomColor: 'lightgray',
-                    borderBottomWidth: 1,
-                    //width: "95vw",
-                    marginTop: 5,
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                }}
-            />
-            </>
-            </TouchableHighlight>
-        );
+            );
+        
     }
 }
 
@@ -93,6 +122,8 @@ class VerAtividades extends Component {
     }
 
     renderAtividadeItem = ({ item }) => {
+        
+        //const textDecorationLine = item.id === selectedId ? 'white' : 'black';
         if (item) {
             return (
                 <AtividadeComponent
@@ -101,6 +132,7 @@ class VerAtividades extends Component {
                     descricao={item.descricao}
                     my_key={item.id}
                     navigation={this.props.navigation}
+                    concluido={item.concluido}
                 />
             );
         }
@@ -124,10 +156,33 @@ class VerAtividades extends Component {
     }
 
     buttonPressed = () => {
-        //this.props.navigation.navigate('Add Contact', { })
+        this.props.navigation.navigate('NovaAtividade');
     }
 
     render() {
+        // if (this.state.data.concluido===false){
+        //     return(
+        //         <View style={[styles.column, { scrollEnabled: true }]}>
+        //         <Text style={styles.title}>Atividades</Text>
+        //         <FlatList
+        //             contentContainerStyle={styles.contentContainerStyle}
+        //             style={[styles.list]}
+        //             data={this.state.data}
+        //             renderItem={this.renderAtividadeItem}
+        //             ItemSeparatorComponent={this.renderSeparator}
+        //             ListEmptyComponent={this.renderEmptyWarning}
+        //             extraData={this.state}
+        //             keyExtractor={item => item.concluido}
+        //         />
+        //         <TouchableHighlight
+        //             style={[styles.btn, styles.columnContainer]}
+        //             onPress={this.buttonPressed}
+        //         >
+        //             <Text style={styles.btnText}>Adicionar</Text>
+        //         </TouchableHighlight>
+        //     </View>
+        //     );
+        // } else {
         return (
             <View style={[styles.column, { scrollEnabled: true }]}>
                 <Text style={styles.title}>Atividades</Text>
@@ -212,6 +267,9 @@ const styles = StyleSheet.create({
         color: "white",
         fontWeight: 'bold',
     },
+    concluido: {
+        textDecorationLine: 'line-through',
+    }
 });
 
 export default VerAtividades;
